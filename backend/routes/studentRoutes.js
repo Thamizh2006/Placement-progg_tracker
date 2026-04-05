@@ -29,6 +29,7 @@ import { generatePDFReport, downloadMyReport } from '../controllers/reportContro
 
 import protect from '../middleware/authMiddleware.js';
 import { authorize } from '../middleware/roleMiddleware.js';
+import { proofUpload } from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
 
@@ -45,7 +46,7 @@ router.get('/check-eligibility', checkMyEligibility);
 router.get('/readiness-insights', getReadinessInsights);
 
 // Task Management
-router.post('/update-task', updateTask);
+router.post('/update-task', proofUpload.single('proofFile'), updateTask);
 
 // Mentor Management
 router.get('/faculty', getAllFaculty);

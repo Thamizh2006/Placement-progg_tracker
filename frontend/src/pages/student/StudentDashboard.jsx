@@ -10,7 +10,6 @@ import {
   Sparkles,
   TrendingUp,
   User,
-  Video,
 } from 'lucide-react';
 import PageLoader from '../../components/PageLoader';
 import InsightFeed from '../../components/InsightFeed';
@@ -154,12 +153,6 @@ const StudentDashboard = () => {
       label: 'Doubts',
       path: '/student/doubts',
       detail: 'Ask your mentor for help on blockers.',
-    },
-    {
-      icon: Video,
-      label: 'Live Sessions',
-      path: '/student/live-sessions',
-      detail: 'Join collaborative coding rooms and mentoring calls.',
     },
     {
       icon: FileText,

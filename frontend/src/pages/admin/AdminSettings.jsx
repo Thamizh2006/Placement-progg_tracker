@@ -62,7 +62,7 @@ const AdminSettings = () => {
           <p className="text-sm uppercase tracking-[0.2em] text-slate-400">System Settings</p>
           <h1 className="mt-2 text-3xl font-semibold text-slate-900">Live platform posture and operating defaults</h1>
           <p className="mt-2 text-slate-600">
-            This page summarizes the active operational posture instead of an empty placeholder, while keeping the UI unchanged.
+            Review the current platform posture, operating defaults, and live administrative signals in one place.
           </p>
         </div>
         <button

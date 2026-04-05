@@ -14,7 +14,6 @@ const StudentReports = lazy(() => import('./pages/student/StudentReports'));
 const StudentAssessments = lazy(() => import('./pages/student/StudentAssessments'));
 const StudentResumeBuilder = lazy(() => import('./pages/student/StudentResumeBuilder'));
 const ForumPage = lazy(() => import('./pages/shared/ForumPage'));
-const LiveSessionsPage = lazy(() => import('./pages/shared/LiveSessionsPage'));
 const FacultyDashboard = lazy(() => import('./pages/faculty/FacultyDashboard'));
 const FacultyStudents = lazy(() => import('./pages/faculty/FacultyStudents'));
 const FacultyDoubts = lazy(() => import('./pages/faculty/FacultyDoubts'));
@@ -54,6 +53,7 @@ const RouteFallback = () => <PageLoader label="Loading page" />;
 function App() {
   return (
     <Router
+      basename={import.meta.env.BASE_URL}
       future={{
         v7_startTransition: true,
         v7_relativeSplatPath: true,
@@ -77,7 +77,6 @@ function App() {
             <Route path="mentor" element={<StudentMentor />} />
             <Route path="doubts" element={<StudentDoubts />} />
             <Route path="forum" element={<ForumPage />} />
-            <Route path="live-sessions" element={<LiveSessionsPage />} />
             <Route path="reports" element={<StudentReports />} />
             <Route path="assessments" element={<StudentAssessments />} />
             <Route path="resume" element={<StudentResumeBuilder />} />
@@ -96,7 +95,6 @@ function App() {
             <Route path="students" element={<FacultyStudents />} />
             <Route path="doubts" element={<FacultyDoubts />} />
             <Route path="forum" element={<ForumPage />} />
-            <Route path="live-sessions" element={<LiveSessionsPage />} />
             <Route path="progress" element={<FacultyStudents />} />
             <Route path="resources" element={<FacultyResources />} />
             <Route path="assessments" element={<FacultyAssessments />} />
@@ -158,7 +156,9 @@ function App() {
                   <h1 className="mb-4 text-3xl font-bold text-red-600">Unauthorized</h1>
                   <p className="mb-8 text-gray-600">You do not have access to this page.</p>
                   <button
-                    onClick={() => (window.location.href = '/login')}
+                    onClick={() => {
+                      window.location.href = `${import.meta.env.BASE_URL}login`;
+                    }}
                     className="rounded-xl bg-indigo-600 px-8 py-3 font-medium text-white hover:bg-indigo-700"
                   >
                     Go to Login

@@ -4,6 +4,12 @@ import api from '../../utils/api';
 import PageLoader from '../../components/PageLoader';
 import usePolling from '../../hooks/usePolling';
 
+const CATEGORY_LABELS = {
+  '5lpa': 'Up to 5 LPA',
+  '7lpa': 'Up to 7 LPA',
+  '10lpa': '10+ LPA',
+};
+
 const AdminDepartments = () => {
   const [departments, setDepartments] = useState([]);
   const [faculty, setFaculty] = useState([]);
@@ -107,11 +113,13 @@ const AdminDepartments = () => {
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <div className="flex items-center gap-2 text-slate-500">
                     <BarChart3 className="h-4 w-4" />
-                    5 / 7 / 10 LPA Split
+                    Category Distribution
                   </div>
-                  <p className="mt-2 text-sm font-medium text-slate-900">
-                    {department.categoryDistribution?.['5lpa'] || 0} / {department.categoryDistribution?.['7lpa'] || 0} / {department.categoryDistribution?.['10lpa'] || 0}
-                  </p>
+                  <div className="mt-2 space-y-1 text-sm font-medium text-slate-900">
+                    <p>{CATEGORY_LABELS['5lpa']}: {department.categoryDistribution?.['5lpa'] || 0}</p>
+                    <p>{CATEGORY_LABELS['7lpa']}: {department.categoryDistribution?.['7lpa'] || 0}</p>
+                    <p>{CATEGORY_LABELS['10lpa']}: {department.categoryDistribution?.['10lpa'] || 0}</p>
+                  </div>
                 </div>
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <p className="text-sm text-slate-500">Faculty Coverage</p>

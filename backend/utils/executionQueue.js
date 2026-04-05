@@ -106,10 +106,14 @@ export const startExecutionProcessor = () => {
   const concurrency = Number(process.env.EXECUTION_WORKER_CONCURRENCY || 2);
 
   setInterval(async () => {
-    const queuedJobs = await CodeExecutionJob.find({ status: 'queued' })
-      .sort({ queuePriority: 1, createdAt: 1 })
-      .limit(concurrency);
+    try {
+      const queuedJobs = await CodeExecutionJob.find({ status: 'queued' })
+        .sort({ queuePriority: 1, createdAt: 1 })
+        .limit(concurrency);
 
-    await Promise.allSettled(queuedJobs.map(processQueuedJob));
+      await Promise.allSettled(queuedJobs.map(processQueuedJob));
+    } catch (error) {
+      console.error('Execution queue processor error:', error.message);
+    }
   }, intervalMs);
 };

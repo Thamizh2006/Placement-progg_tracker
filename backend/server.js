@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
+import path from 'node:path';
 
 import adminRoutes from './routes/adminRoutes.js';
 import activityRoutes from './routes/activityRoutes.js';
@@ -23,12 +24,28 @@ dotenv.config();
 
 const app = express();
 const isDatabaseReady = () => mongoose.connection.readyState === 1;
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 mongoose.set('strictQuery', false);
 
-app.use(cors());
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error('CORS blocked for this origin'));
+    },
+  })
+);
 app.use(express.json());
 app.use(applySecurityHeaders);
+app.use('/uploads', express.static(path.resolve(process.cwd(), 'backend', 'uploads')));
 
 const authRateLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
@@ -44,6 +61,14 @@ app.get('/api/health', (_req, res) => {
     status: databaseReady ? 'ok' : 'degraded',
     database: databaseReady ? 'connected' : 'disconnected',
   });
+});
+
+app.get('/', (_req, res) => {
+  res.status(200).type('text/plain').send('API running 🚀');
+});
+
+app.get('/favicon.ico', (_req, res) => {
+  res.status(204).end();
 });
 
 app.use('/api', (req, res, next) => {
@@ -79,12 +104,11 @@ mongoose
   .connect(process.env.MONGO_URI?.trim())
   .then(() => {
     console.log('MongoDB connected');
+    startExecutionProcessor();
   })
   .catch((error) => {
     console.error('DB error:', error.message);
-    console.error(
-      'Authentication APIs require MongoDB. Start MongoDB on 127.0.0.1:27017 or update MONGO_URI in .env.'
-    );
+    console.error('Authentication APIs require a reachable MongoDB instance. Update MONGO_URI and redeploy.');
   });
 
 mongoose.connection.on('disconnected', () => {
@@ -97,6 +121,5 @@ mongoose.connection.on('error', (error) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  startExecutionProcessor();
+  console.log(`Server running on port ${PORT}`);
 });

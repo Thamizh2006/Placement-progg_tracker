@@ -11,6 +11,14 @@ import {
 
 const DEPARTMENTS = ['ALL', 'CSE', 'ECE', 'EEE', 'MECH', 'IT', 'ADS', 'CYBER SECURITY', 'CHEMICAL', 'BIOTECHNOLOGY'];
 const CATEGORIES = ['ALL', '5lpa', '7lpa', '10lpa'];
+const CATEGORY_LABELS = {
+  ALL: 'All Categories',
+  '5lpa': 'Up to 5 LPA',
+  '7lpa': 'Up to 7 LPA',
+  '10lpa': '10+ LPA',
+};
+
+const getCategoryLabel = (category) => CATEGORY_LABELS[category] || category;
 
 const AdminReports = () => {
   const { role } = useAuth();
@@ -71,7 +79,7 @@ const AdminReports = () => {
       reportRows.map((report) => ({
         email: report.student.email,
         department: report.student.department,
-        category: report.category,
+        category: getCategoryLabel(report.category),
         progressPercentage: report.progressPercentage,
         eligible: report.eligible,
         mentor: report.student.assignedFaculty?.email || 'Unassigned',
@@ -208,7 +216,7 @@ const AdminReports = () => {
               >
                 {CATEGORIES.map((category) => (
                   <option key={category} value={category}>
-                    {category}
+                    {getCategoryLabel(category)}
                   </option>
                 ))}
               </select>
@@ -264,7 +272,7 @@ const AdminReports = () => {
                 <tr key={report.student._id} className="text-sm text-slate-700">
                   <td className="py-4 pr-4 font-medium text-slate-900">{report.student.email}</td>
                   <td className="py-4 pr-4">{report.student.department}</td>
-                  <td className="py-4 pr-4">{report.category}</td>
+                  <td className="py-4 pr-4">{getCategoryLabel(report.category)}</td>
                   <td className="py-4 pr-4">{report.progressPercentage}%</td>
                   <td className="py-4 pr-4">
                     <span

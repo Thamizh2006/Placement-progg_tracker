@@ -15,6 +15,14 @@ import usePolling from '../../hooks/usePolling';
 import { baseChartOptions, chartPalette } from '../../lib/chartSetup';
 import api from '../../utils/api';
 
+const CATEGORY_LABELS = {
+  '5lpa': 'Up to 5 LPA',
+  '7lpa': 'Up to 7 LPA',
+  '10lpa': '10+ LPA',
+};
+
+const getCategoryLabel = (category) => CATEGORY_LABELS[category] || category;
+
 const emptyStats = {
   facultyCount: 0,
   totalStudents: 0,
@@ -64,7 +72,7 @@ const HodDashboard = () => {
 
   const categoryChartData = useMemo(
     () => ({
-      labels: ['5 LPA', '7 LPA', '10 LPA'],
+      labels: [getCategoryLabel('5lpa'), getCategoryLabel('7lpa'), getCategoryLabel('10lpa')],
       datasets: [
         {
           data: [

@@ -11,6 +11,14 @@ import {
   exportStudentPerformancePdf,
 } from '../../utils/pdfExport';
 
+const CATEGORY_LABELS = {
+  '5lpa': 'Up to 5 LPA',
+  '7lpa': 'Up to 7 LPA',
+  '10lpa': '10+ LPA',
+};
+
+const getCategoryLabel = (category) => CATEGORY_LABELS[category] || category;
+
 const AdminAnalytics = () => {
   const { role } = useAuth();
   const isSuperadmin = role === 'superadmin';
@@ -60,7 +68,7 @@ const AdminAnalytics = () => {
       reports.map((report) => ({
         email: report.student.email,
         department: report.student.department,
-        category: report.category,
+        category: getCategoryLabel(report.category),
         progressPercentage: report.progressPercentage,
         eligible: report.eligible,
         mentor: report.student.assignedFaculty?.email || 'Unassigned',
@@ -135,7 +143,7 @@ const AdminAnalytics = () => {
     );
 
     return {
-      labels: ['5 LPA', '7 LPA', '10 LPA'],
+      labels: [getCategoryLabel('5lpa'), getCategoryLabel('7lpa'), getCategoryLabel('10lpa')],
       datasets: [
         {
           data: [distribution['5lpa'], distribution['7lpa'], distribution['10lpa']],

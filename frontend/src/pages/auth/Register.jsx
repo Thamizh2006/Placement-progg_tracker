@@ -109,10 +109,11 @@ const Register = () => {
             <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6">
               <div className="flex items-center gap-2 text-emerald-100">
                 <Sparkles className="h-4 w-4" />
-                <p className="text-sm font-semibold">Recommended superadmin credentials</p>
+                <p className="text-sm font-semibold">Account setup guidance</p>
               </div>
-              <p className="mt-4 text-sm text-slate-300">Email: realtime.superadmin@gmail.com</p>
-              <p className="mt-1 text-sm text-slate-300">Password: SuperAdmin@123</p>
+              <p className="mt-4 text-sm leading-6 text-slate-300">
+                Use an official email address and create a strong password that matches your organization's access policy.
+              </p>
             </div>
             <div className="grid gap-3 rounded-[1.75rem] border border-white/10 bg-white/5 p-5 text-sm text-slate-300">
               <p>Students get progress, doubts, reports, assessments, and resume tools.</p>
@@ -184,12 +185,12 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className="input-field pl-12"
-                placeholder="realtime.student@gmail.com"
+                placeholder="Email"
                 required
               />
             </div>
             <p className="mt-2 text-xs text-slate-500">
-              Use a valid address like `realtime.student@gmail.com` or `realtime.superadmin@gmail.com`.
+              Use a valid institutional or organization email address.
             </p>
           </div>
 
@@ -203,7 +204,7 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 className="input-field pl-12"
-                placeholder="Test@123"
+                placeholder="Password"
                 required
                 minLength={8}
               />
@@ -220,7 +221,7 @@ const Register = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className="input-field pl-12"
-                placeholder="Test@123"
+                placeholder="Confirm password"
                 required
               />
             </div>

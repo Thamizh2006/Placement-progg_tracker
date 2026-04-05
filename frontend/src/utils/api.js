@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const appBaseUrl = import.meta.env.BASE_URL || '/';
+
 const apiBaseUrl =
   import.meta.env.VITE_API_BASE_URL ||
   `http://${import.meta.env.VITE_API_PROXY_HOST || 'localhost'}:${
@@ -24,7 +26,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      window.location.href = `${appBaseUrl}login`;
     }
     return Promise.reject(error);
   }

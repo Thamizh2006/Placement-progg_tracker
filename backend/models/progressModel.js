@@ -31,7 +31,11 @@ const progressSchema = new mongoose.Schema(
         },
         proofType: {
           type: String,
-          enum: ['screenshot', 'document', null],
+          enum: ['link', 'document', null],
+          default: null,
+        },
+        proofName: {
+          type: String,
           default: null,
         },
         completedAt: {

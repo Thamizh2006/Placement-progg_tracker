@@ -14,94 +14,84 @@ const seedCategories = async () => {
     await Category.deleteMany();
 
     await Category.insertMany([
-      /* ===========================
-         🔵 UP TO 5 LPA
-      ============================ */
       {
         name: '5lpa',
         rows: [
           {
-            title: 'Coding Problems Solved',
-            tasks: ['Minimum 150 problems (HackerRank/CodeChef/LeetCode/SkillRack)'],
+            title: 'Coding Problems',
+            tasks: ['Minimum 150 problems (HackerRank / CodeChef / LeetCode / SkillRack)'],
           },
           {
-            title: 'Open Source Contribution',
-            tasks: ['Hacktoberfest: 1 accepted PR', 'One beginner issue solved (GitHub)'],
-          },
-          {
-            title: 'Competition Achievement (Any Three)',
+            title: 'Open Source / GitHub',
             tasks: [
-              'CodeVita Round 1',
-              'HackWithInfy participant',
-              'GRID participant',
-              'Internal hackathon Top 20%',
-              'Google Cloud Arcade (Qwiklabs)',
-              'GDSC Solution Challenge (Entry Round)',
+              'Hacktoberfest: 1 accepted PR',
+              'Solve 1 beginner issue',
+              'Join GitHub and participate in discussions',
             ],
           },
           {
-            title: 'Certificate Requirement',
-            tasks: ['NPTEL 4/8 week certificate', 'Any one International Certificate'],
+            title: 'Competitions / Achievements',
+            tasks: [
+              'Any one of the following:',
+              'National contest participation',
+              'Internal hackathon Top 20%',
+              'CodeVita Round 1',
+              'HackWithInfy participation',
+            ],
+          },
+          {
+            title: 'Certificates',
+            tasks: ['Both required:', 'NPTEL (4/8 week)', 'Any one international certificate'],
           },
           {
             title: 'CP Rating',
-            tasks: ['CodeChef 1*-2*', 'Codeforces Newbie (800-999)', 'AtCoder Grey (0-399)'],
+            tasks: ['CodeChef: 1-2 star', 'Codeforces: 800-999 (Newbie)', 'AtCoder: 0-399'],
           },
           {
-            title: 'Project/Product Development (Any Two)',
+            title: 'Projects / Product Development',
             tasks: [
+              'Any two of the following:',
               'SIH participation',
               'Kaggle beginner notebook',
-              'Internal hackathon Top 20%',
-              'Open-source mini-project (10+ GitHub stars)',
-              '1-2 merged PRs (public repo)',
-              'GSSOC/SSOC Contributor badge',
-              'Hacktoberfest Completed (4 PR badge)',
+              'Internal workshop / mini project',
+              'Open-source mini project (10+ stars optional)',
             ],
           },
           {
-            title: 'Aptitude Checkpoint (Any One)',
-            tasks: ['TCS NQT Cleared', 'Internal aptitude test pass'],
+            title: 'Aptitude',
+            tasks: ['Any one of the following:', 'Internal aptitude test pass'],
           },
           {
-            title: 'Soft Skills Checkpoint (Any One)',
-            tasks: [
-              'TCS ION Career Edge',
-              'NPTEL Soft Skills Pass',
-              'Internal communication workshop',
-            ],
+            title: 'Soft Skills',
+            tasks: ['Any one of the following:', 'NPTEL Soft Skills (Pass)'],
           },
         ],
       },
-
-      /* ===========================
-         🟡 UP TO 7 LPA
-      ============================ */
       {
         name: '7lpa',
         rows: [
           {
-            title: 'Coding Problems Solved',
-            tasks: ['Minimum 250 problems', '100+ LeetCode problems mandatory'],
+            title: 'Coding Problems',
+            tasks: ['Minimum 250 problems (100+ LeetCode)'],
           },
           {
-            title: 'Open Source Contribution',
-            tasks: ['GSSOC/SSOC registration + 1 PR', 'Joined GitHub issues/discussions'],
+            title: 'Open Source / GitHub',
+            tasks: ['1-2 merged PRs (public repo)', 'Contributor in OSS community'],
           },
           {
-            title: 'Competition Achievement (Any Three)',
+            title: 'Competitions / Achievements',
             tasks: [
+              'Any three of the following:',
               'CodeVita Round 2',
-              'HackWithInfy shortlist',
-              'GRID shortlist',
-              'Amazon ML Summer School selected',
-              'HackerEarth Circuits Top 40%',
-              'CodeChef Long/Starters Top 25%',
+              'HackWithInfy shortlisted',
+              'Internal hackathon Top 20%',
+              'HackerEarth Circuits Top 20%',
             ],
           },
           {
-            title: 'Advanced Certificate Requirement (Any Two)',
+            title: 'Certificates',
             tasks: [
+              'Any two of the following:',
               'NPTEL Elite',
               'AWS Practitioner',
               'Azure Fundamentals',
@@ -110,114 +100,107 @@ const seedCategories = async () => {
           },
           {
             title: 'CP Rating',
-            tasks: [
-              'CodeChef 2*-3*',
-              'Codeforces 1000-1199 (Newbie->Pupil)',
-              'AtCoder Grey-Brown (400-799)',
-            ],
+            tasks: ['CodeChef: 2-3 star', 'Codeforces: 1000-1199 (Pupil)', 'AtCoder: 400-799'],
           },
           {
-            title: 'Intermediate Project Achievement (Any Two)',
+            title: 'Projects / Product Development',
             tasks: [
+              'Any two of the following:',
               'SIH finalist (college/nodal)',
-              'Devfolio hackathon shortlist (Top 10)',
-              'Kaggle Bronze/Top 40%',
+              'Kaggle Bronze (Top 40%)',
+              'Devfolio hackathon Top 10',
               'College project expo Top 10',
+              'Open-source project (10+ stars)',
             ],
           },
           {
-            title: 'Aptitude Checkpoint (Any One)',
-            tasks: ['TCS NQT Cognitive > 75%', 'Internal aptitude test > 75%'],
+            title: 'Aptitude',
+            tasks: ['Any one of the following:', 'Internal test > 75%'],
           },
           {
-            title: 'Soft Skills Checkpoint (Any One)',
-            tasks: ['NPTEL Soft Skills Elite', 'Cambridge PET', 'Toastmasters Icebreaker'],
+            title: 'Soft Skills',
+            tasks: ['Any one of the following:', 'NPTEL Soft Skills (Elite)', 'Career Edge'],
           },
         ],
       },
-
-      /* ===========================
-         🔴 ABOVE 10 LPA
-      ============================ */
       {
         name: '10lpa',
         rows: [
           {
-            title: 'Coding Problems Solved',
-            tasks: ['400-500 problems', '150+ LeetCode problems mandatory'],
+            title: 'Coding Problems',
+            tasks: ['Minimum 400-500 problems (150+ LeetCode)'],
           },
           {
-            title: 'Open Source Contribution',
+            title: 'Open Source / GitHub',
             tasks: [
-              '3+ merged PRs (public repos)',
-              'GSSOC/SSOC Top Contributor/Gold Badge',
-              'Maintainer/co-maintainer (100+ stars repo)',
+              '3+ merged PRs',
+              'Maintainer / Co-maintainer (100+ contributions)',
+              'Completed OSS project',
+              'Hacktoberfest (4 PR badge)',
             ],
           },
-
           {
-            title: 'Competition Achievement (Mandatory Finalist - Any Five)',
+            title: 'Competitions / Achievements',
             tasks: [
+              'Any five of the following:',
               'ICPC Regional Finalist',
-              'Code Gladiators finalist',
-              'Codeforces Global Rank Top 20%',
-              'AtCoder Regular Contest High Rank',
-              'HackerEarth Circuits Top 20%',
-              'Reply Code Challenge Global ranking',
+              'Code Gladiators Finalist',
+              'Codeforces Top 20%',
+              'AtCoder High Rank',
               'LeetCode Weekly Top 5%',
               'Kaggle Silver',
               'Facebook Hacker Cup Round 2',
-              'CodeChef Long/Starters Top 10%',
+              'CodeChef Top 10%',
             ],
           },
-
           {
-            title: 'Premium International Certificates (Any Three)',
+            title: 'Certificates',
             tasks: [
-              'RHCSA',
-              'TensorFlow Developer',
+              'Any three of the following:',
               'AWS Solutions Architect',
               'GCP ACE',
-              'Azure Certification',
+              'Azure Developer',
+              'RHCSA',
+              'TensorFlow Developer',
             ],
           },
           {
             title: 'CP Rating',
-            tasks: [
-              'CodeChef 3*+',
-              'Codeforces 1200-1400+ (Pupil/Specialist)',
-              'AtCoder Green (800-1199)',
-            ],
+            tasks: ['CodeChef: 3+ star', 'Codeforces: 1200-1400+ (Specialist)', 'AtCoder: 800-1199'],
           },
-
           {
-            title: 'Advanced Project Achievement (Any Two)',
+            title: 'Projects / Product Development',
             tasks: [
+              'Any two of the following:',
               'SIH Winner',
               'Kaggle Silver (Top 10-20%)',
-              'Devfolio National Finalist',
-              'Industry Project Excellence Award',
-              'Play Store app 10K+ installs',
+              'Devfolio National Finalist (ETHIndia/InOut)',
+              'Industry Project Award',
               'GitHub repo 100+ stars',
             ],
           },
           {
-            title: 'Aptitude Checkpoint (Any One)',
+            title: 'Aptitude',
             tasks: [
-              'HackerRank Problem Solving Gold',
-              'TCS NQT Cognitive ≥ 85%',
-              'Internal aptitude test ≥ 85%',
+              'Any one of the following:',
+              'Internal test > 85%',
+              'HackerRank Problem Solving (Gold)',
             ],
           },
           {
-            title: 'Soft Skills Checkpoint (Any One)',
-            tasks: ['Cambridge B2 Vantage', 'IELTS ≥ 6.5 / TOEFL > 85', 'Toastmasters CC'],
+            title: 'Soft Skills',
+            tasks: [
+              'Any one of the following:',
+              'IELTS >= 6.5',
+              'TOEFL >= 85',
+              'Toastmasters (CC)',
+            ],
           },
         ],
       },
     ]);
 
-    console.log('✅ Real categories seeded successfully');
+    console.log('Categories seeded successfully');
     process.exit();
   } catch (error) {
     console.error(error);

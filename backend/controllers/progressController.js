@@ -135,6 +135,7 @@ export const checkEligibility = async (req, res) => {
 export const updateTask = async (req, res) => {
   try {
     const { rowTitle, taskName, proofUrl, proofType } = req.body;
+    const uploadedFile = req.file;
 
     if (!rowTitle || !taskName) {
       return res.status(400).json({
@@ -142,11 +143,32 @@ export const updateTask = async (req, res) => {
       });
     }
 
-    // Validate proofType if provided
-    if (proofType && !['screenshot', 'document'].includes(proofType)) {
+    if (proofType && !['link', 'document'].includes(proofType)) {
       return res.status(400).json({
-        message: "proofType must be either 'screenshot' or 'document'",
+        message: "proofType must be either 'link' or 'document'",
       });
+    }
+
+    if (proofType === 'document' && !uploadedFile) {
+      return res.status(400).json({
+        message: 'Upload a PDF or Word document for document proof.',
+      });
+    }
+
+    if (proofType === 'link' && !proofUrl?.trim()) {
+      return res.status(400).json({
+        message: 'Provide a Drive link or proof URL for link-based proof.',
+      });
+    }
+
+    if (proofUrl?.trim()) {
+      try {
+        new URL(proofUrl);
+      } catch {
+        return res.status(400).json({
+          message: 'Proof URL must be a valid link.',
+        });
+      }
     }
 
     const progress = await Progress.findOne({
@@ -170,12 +192,16 @@ export const updateTask = async (req, res) => {
       });
     }
 
-    // Add task with optional proof
+    const storedProofUrl = uploadedFile
+      ? `/uploads/proofs/${uploadedFile.filename}`
+      : proofUrl?.trim() || null;
+
     progress.completedTasks.push({
       rowTitle,
       taskName,
-      proofUrl: proofUrl || null,
+      proofUrl: storedProofUrl,
       proofType: proofType || null,
+      proofName: uploadedFile?.originalname || null,
       completedAt: new Date(),
     });
 

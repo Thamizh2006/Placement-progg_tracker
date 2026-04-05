@@ -14,7 +14,6 @@ import {
   MessageCircle,
   Settings,
   Shield,
-  Video,
   Users,
   X,
 } from 'lucide-react';
@@ -37,7 +36,6 @@ const ProtectedLayout = () => {
       { icon: BookOpen, label: 'Progress', path: '/student/progress' },
       { icon: Users, label: 'Mentor', path: '/student/mentor' },
       { icon: MessageCircle, label: 'Doubts', path: '/student/doubts' },
-      { icon: Video, label: 'Live Sessions', path: '/student/live-sessions' },
       { icon: Megaphone, label: 'Forum', path: '/student/forum' },
       { icon: FileText, label: 'Reports', path: '/student/reports' },
       { icon: BarChart3, label: 'Assessments', path: '/student/assessments' },
@@ -47,7 +45,6 @@ const ProtectedLayout = () => {
       { icon: LayoutDashboard, label: 'Dashboard', path: '/faculty/dashboard' },
       { icon: Users, label: 'Students', path: '/faculty/students' },
       { icon: MessageCircle, label: 'Doubts', path: '/faculty/doubts' },
-      { icon: Video, label: 'Live Sessions', path: '/faculty/live-sessions' },
       { icon: Megaphone, label: 'Forum', path: '/faculty/forum' },
       { icon: BarChart3, label: 'Progress', path: '/faculty/progress' },
       { icon: BookOpen, label: 'Resources', path: '/faculty/resources' },

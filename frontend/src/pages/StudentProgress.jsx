@@ -5,6 +5,15 @@ import PageLoader from '../components/PageLoader';
 import api from '../utils/api';
 import usePolling from '../hooks/usePolling';
 
+const CATEGORY_LABELS = {
+  '5lpa': 'Up to 5 LPA',
+  '7lpa': 'Up to 7 LPA',
+  '10lpa': '10+ LPA',
+};
+
+const getCategoryLabel = (category) => CATEGORY_LABELS[category] || category;
+const ALLOWED_PROOF_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+
 const StudentProgress = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -86,11 +95,26 @@ const StudentProgress = () => {
     setUpdatingTask(`${rowTitle}:${taskName}`);
 
     try {
-      await api.post('/student/update-task', {
-        rowTitle,
-        taskName,
-        proofUrl: proof?.proofUrl || null,
-        proofType: proof?.proofType || null,
+      const formData = new FormData();
+      formData.append('rowTitle', rowTitle);
+      formData.append('taskName', taskName);
+
+      if (proof?.proofType) {
+        formData.append('proofType', proof.proofType);
+      }
+
+      if (proof?.proofType === 'link' && proof?.proofUrl) {
+        formData.append('proofUrl', proof.proofUrl);
+      }
+
+      if (proof?.proofType === 'document' && proof?.proofFile) {
+        formData.append('proofFile', proof.proofFile);
+      }
+
+      await api.post('/student/update-task', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       toast.success('Task marked as completed');
       await loadData(false);
@@ -165,7 +189,7 @@ const StudentProgress = () => {
                 <option value="">Select category</option>
                 {categories.map((category) => (
                   <option key={category._id} value={category.name}>
-                    {category.name}
+                    {getCategoryLabel(category.name)}
                   </option>
                 ))}
               </select>
@@ -238,7 +262,7 @@ const StudentProgress = () => {
         <div className="rounded-[1.75rem] bg-white p-6 shadow-sm">
           <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Task Board</p>
           <h2 className="mt-2 text-2xl font-semibold text-slate-900">
-            {categoryData ? `${categoryData.name} roadmap` : 'Choose a category to start'}
+            {categoryData ? `${getCategoryLabel(categoryData.name)} roadmap` : 'Choose a category to start'}
           </h2>
 
           {!categoryData ? (
@@ -302,39 +326,73 @@ const StudentProgress = () => {
                             )}
                           </div>
                           {!isDone && (
-                            <div className="mt-4 grid gap-3 md:grid-cols-2">
-                              <input
-                                type="text"
-                                value={proofs[taskKey]?.proofUrl || ''}
-                                onChange={(event) =>
-                                  setProofs((current) => ({
-                                    ...current,
-                                    [taskKey]: {
-                                      ...current[taskKey],
-                                      proofUrl: event.target.value,
-                                    },
-                                  }))
-                                }
-                                className="rounded-2xl border border-slate-200 px-4 py-3"
-                                placeholder="Optional proof URL"
-                              />
+                            <div className="mt-4 space-y-3">
                               <select
                                 value={proofs[taskKey]?.proofType || ''}
                                 onChange={(event) =>
                                   setProofs((current) => ({
                                     ...current,
                                     [taskKey]: {
-                                      ...current[taskKey],
+                                      proofUrl: '',
+                                      proofFile: null,
                                       proofType: event.target.value || null,
                                     },
                                   }))
                                 }
                                 className="rounded-2xl border border-slate-200 px-4 py-3"
                               >
-                                <option value="">No proof type</option>
-                                <option value="screenshot">Screenshot</option>
-                                <option value="document">Document</option>
+                                <option value="">No proof attached</option>
+                                <option value="link">Drive link / URL</option>
+                                <option value="document">PDF / Word document</option>
                               </select>
+
+                              {proofs[taskKey]?.proofType === 'link' && (
+                                <input
+                                  type="url"
+                                  value={proofs[taskKey]?.proofUrl || ''}
+                                  onChange={(event) =>
+                                    setProofs((current) => ({
+                                      ...current,
+                                      [taskKey]: {
+                                        ...current[taskKey],
+                                        proofUrl: event.target.value,
+                                      },
+                                    }))
+                                  }
+                                  className="w-full rounded-2xl border border-slate-200 px-4 py-3"
+                                  placeholder="Paste Drive link or proof URL"
+                                />
+                              )}
+
+                              {proofs[taskKey]?.proofType === 'document' && (
+                                <div className="space-y-2">
+                                  <input
+                                    type="file"
+                                    accept=".pdf,.doc,.docx"
+                                    onChange={(event) => {
+                                      const file = event.target.files?.[0] || null;
+
+                                      if (file && !ALLOWED_PROOF_TYPES.includes(file.type)) {
+                                        toast.error('Only PDF, DOC, and DOCX files are allowed.');
+                                        event.target.value = '';
+                                        return;
+                                      }
+
+                                      setProofs((current) => ({
+                                        ...current,
+                                        [taskKey]: {
+                                          ...current[taskKey],
+                                          proofFile: file,
+                                        },
+                                      }));
+                                    }}
+                                    className="w-full rounded-2xl border border-slate-200 px-4 py-3"
+                                  />
+                                  <p className="text-xs text-slate-500">
+                                    Upload a PDF, DOC, or DOCX file up to 5 MB.
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>

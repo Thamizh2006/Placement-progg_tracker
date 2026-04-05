@@ -7,7 +7,6 @@ import {
   MessageCircle,
   TrendingUp,
   Users,
-  Video,
 } from 'lucide-react';
 import PageLoader from '../../components/PageLoader';
 import usePolling from '../../hooks/usePolling';
@@ -83,12 +82,6 @@ const FacultyDashboard = () => {
       label: 'Doubts',
       path: '/faculty/doubts',
       detail: 'Answer active doubt threads from your students.',
-    },
-    {
-      icon: Video,
-      label: 'Live Sessions',
-      path: '/faculty/live-sessions',
-      detail: 'Host pair-programming rooms and video consultations.',
     },
     {
       icon: TrendingUp,

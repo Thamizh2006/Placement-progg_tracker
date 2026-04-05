@@ -11,6 +11,14 @@ import {
   exportStudentPerformancePdf,
 } from '../../utils/pdfExport';
 
+const CATEGORY_LABELS = {
+  '5lpa': 'Up to 5 LPA',
+  '7lpa': 'Up to 7 LPA',
+  '10lpa': '10+ LPA',
+};
+
+const getCategoryLabel = (category) => CATEGORY_LABELS[category] || category;
+
 const emptyDashboard = {
   department: '',
   totalStudents: 0,
@@ -66,7 +74,7 @@ const HodAnalytics = () => {
       students.map((entry) => ({
         email: entry.student.email,
         department: entry.student.department,
-        category: entry.progress?.category || entry.student.selectedCategory || '-',
+        category: getCategoryLabel(entry.progress?.category || entry.student.selectedCategory || '-') ,
         progressPercentage: entry.progress?.progressPercentage || 0,
         eligible: entry.eligible,
         mentor: entry.student.assignedFaculty?.email || 'Unassigned',
@@ -97,7 +105,7 @@ const HodAnalytics = () => {
 
   const categoryChartData = useMemo(
     () => ({
-      labels: ['5 LPA', '7 LPA', '10 LPA'],
+      labels: [getCategoryLabel('5lpa'), getCategoryLabel('7lpa'), getCategoryLabel('10lpa')],
       datasets: [
         {
           data: [

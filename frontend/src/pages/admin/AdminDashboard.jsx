@@ -21,6 +21,14 @@ import usePolling from '../../hooks/usePolling';
 import { baseChartOptions, chartPalette } from '../../lib/chartSetup';
 import api from '../../utils/api';
 
+const CATEGORY_LABELS = {
+  '5lpa': 'Up to 5 LPA',
+  '7lpa': 'Up to 7 LPA',
+  '10lpa': '10+ LPA',
+};
+
+const getCategoryLabel = (category) => CATEGORY_LABELS[category] || category;
+
 const defaultOverview = {
   role: 'placement',
   access: {
@@ -614,7 +622,7 @@ const AdminDashboard = () => {
                 onChange={handleCreateChange}
                 required
                 className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
-                placeholder="realtime.user@gmail.com"
+                placeholder="name@institution.edu"
               />
             </label>
 
@@ -679,7 +687,7 @@ const AdminDashboard = () => {
                 >
                   {categoryOptions.map((category) => (
                     <option key={category} value={category}>
-                      {category}
+                      {getCategoryLabel(category)}
                     </option>
                   ))}
                 </select>

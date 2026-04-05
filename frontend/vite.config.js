@@ -6,8 +6,10 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const backendPort = env.VITE_API_PROXY_PORT || '3000';
   const backendHost = env.VITE_API_PROXY_HOST || 'localhost';
+  const appBasePath = env.VITE_APP_BASE_PATH || '/';
 
   return {
+    base: appBasePath,
     plugins: [react()],
     server: {
       proxy: {
