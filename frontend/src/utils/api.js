@@ -2,10 +2,23 @@ import axios from 'axios';
 
 const appBaseUrl = import.meta.env.BASE_URL || '/';
 const trimTrailingSlash = (value = '') => value.replace(/\/+$/, '');
+const normalizeApiBaseUrl = (value = '') => {
+  const normalizedValue = trimTrailingSlash(value);
+
+  if (!normalizedValue) {
+    return normalizedValue;
+  }
+
+  if (normalizedValue.startsWith('http') && !normalizedValue.endsWith('/api')) {
+    return `${normalizedValue}/api`;
+  }
+
+  return normalizedValue;
+};
 
 const resolveApiBaseUrl = () => {
   if (import.meta.env.VITE_API_BASE_URL) {
-    return trimTrailingSlash(import.meta.env.VITE_API_BASE_URL);
+    return normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL);
   }
 
   if (import.meta.env.DEV) {
