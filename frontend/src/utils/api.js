@@ -1,15 +1,25 @@
 import axios from 'axios';
 
 const appBaseUrl = import.meta.env.BASE_URL || '/';
+const trimTrailingSlash = (value = '') => value.replace(/\/+$/, '');
 
-const apiBaseUrl =
-  import.meta.env.VITE_API_BASE_URL ||
-  `http://${import.meta.env.VITE_API_PROXY_HOST || 'localhost'}:${
-    import.meta.env.VITE_API_PROXY_PORT || '3000'
-  }/api`;
+const resolveApiBaseUrl = () => {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return trimTrailingSlash(import.meta.env.VITE_API_BASE_URL);
+  }
+
+  if (import.meta.env.DEV) {
+    return `http://${import.meta.env.VITE_API_PROXY_HOST || 'localhost'}:${
+      import.meta.env.VITE_API_PROXY_PORT || '3000'
+    }/api`;
+  }
+
+  return '/api';
+};
 
 const api = axios.create({
-  baseURL: apiBaseUrl,
+  baseURL: resolveApiBaseUrl(),
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {

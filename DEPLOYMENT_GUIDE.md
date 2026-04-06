@@ -86,7 +86,10 @@ This repo already has a usable [netlify.toml](c:/Users/mutha/OneDrive/Desktop/au
 
 ### Netlify environment variables
 
-- `VITE_API_BASE_URL=https://your-render-service.onrender.com/api`
+- Key: `VITE_API_BASE_URL`
+- Value: `https://your-render-service.onrender.com/api`
+
+Do not put `=` inside the key field in the Netlify UI.
 
 After adding the variable, trigger a new deploy so the frontend rebuilds with the correct API URL.
 

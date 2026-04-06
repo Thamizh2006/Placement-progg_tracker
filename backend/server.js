@@ -24,6 +24,7 @@ dotenv.config();
 
 const app = express();
 const isDatabaseReady = () => mongoose.connection.readyState === 1;
+const isProduction = process.env.NODE_ENV === 'production';
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL || '')
   .split(',')
   .map((origin) => origin.trim())
@@ -34,13 +35,24 @@ mongoose.set('strictQuery', false);
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      if (!isProduction && allowedOrigins.length === 0) {
+        callback(null, true);
+        return;
+      }
+
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
         return;
       }
 
       callback(new Error('CORS blocked for this origin'));
     },
+    credentials: true,
   })
 );
 app.use(express.json());
@@ -64,7 +76,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.get('/', (_req, res) => {
-  res.status(200).type('text/plain').send('API running 🚀');
+  res.status(200).type('text/plain').send('API running');
 });
 
 app.get('/favicon.ico', (_req, res) => {
@@ -78,7 +90,7 @@ app.use('/api', (req, res, next) => {
 
   if (!isDatabaseReady()) {
     return res.status(503).json({
-      message: 'Database unavailable. Start MongoDB and try again.',
+      message: 'Database unavailable. Check MONGO_URI and try again.',
     });
   }
 
@@ -99,6 +111,12 @@ app.use('/api/resume', resumeRoutes);
 app.use('/api/tests', testRoutes);
 
 console.log('JWT_SECRET loaded:', process.env.JWT_SECRET ? 'Yes' : 'No');
+
+if (isProduction && allowedOrigins.length === 0) {
+  console.warn(
+    'No FRONTEND_URL or ALLOWED_ORIGINS configured. Browser requests may be blocked by CORS.'
+  );
+}
 
 mongoose
   .connect(process.env.MONGO_URI?.trim())
