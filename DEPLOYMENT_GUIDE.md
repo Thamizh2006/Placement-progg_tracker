@@ -60,7 +60,9 @@ Set these in the Render dashboard:
 - `ALLOWED_ORIGINS`
   Use the same Netlify URL, or multiple URLs separated by commas
 - `APP_URL`
-  Set this to your Render backend URL
+  Set this to your Render backend URL (no `/api`), for example `https://your-render-service.onrender.com`
+- `NODE_ENV`
+  Set this to `production` if you are not using `render.yaml`
 - `PORT`
   Optional on Render, because Render usually provides this automatically
 
@@ -90,6 +92,8 @@ This repo already has a usable [netlify.toml](c:/Users/mutha/OneDrive/Desktop/au
 - Value: `https://your-render-service.onrender.com/api`
 
 Do not put `=` inside the key field in the Netlify UI.
+
+If you accidentally set the value without `/api`, the frontend will auto-correct it, but the recommended value still includes `/api`.
 
 After adding the variable, trigger a new deploy so the frontend rebuilds with the correct API URL.
 
