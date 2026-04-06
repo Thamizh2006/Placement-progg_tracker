@@ -78,6 +78,10 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+app.get('/api', (_req, res) => {
+  res.status(200).json({ status: 'ok', message: 'API running' });
+});
+
 app.get('/', (_req, res) => {
   res.status(200).type('text/plain').send('API running');
 });
