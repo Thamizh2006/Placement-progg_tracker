@@ -6,6 +6,7 @@ import {
   autoGenerateResume,
   getMyResume,
   getResumeAnalytics,
+  previewResumeAnalysis,
   saveMyResume,
 } from '../controllers/resumeController.js';
 
@@ -16,6 +17,7 @@ router.use(protect);
 router.get('/my', authorize('student'), getMyResume);
 router.post('/generate', authorize('student'), autoGenerateResume);
 router.put('/my', authorize('student'), saveMyResume);
+router.post('/preview-analysis', authorize('student'), previewResumeAnalysis);
 router.post('/analyze', authorize('student'), analyzeMyResume);
 router.get('/analytics', authorize('faculty', 'placement', 'superadmin'), getResumeAnalytics);
 

@@ -7,6 +7,7 @@ import { logAuditEvent } from '../utils/auditLogger.js';
 import {
   analyzeWeakAreas,
   calculateReadiness,
+  evaluateStudentLevel,
   rankMentors,
 } from '../utils/intelligenceEngine.js';
 import { createNotifications } from '../utils/notificationService.js';
@@ -408,5 +409,35 @@ export const getMentorRecommendations = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const checkMyLevel = async (req, res) => {
+  try {
+    const { dsaConcepts = [], domainConcepts = [], targetDomain = 'Full Stack Development' } = req.body;
+
+    const normalizeList = (value) =>
+      (Array.isArray(value) ? value : String(value).split(/[\n,]/))
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+    const normalizedDsaConcepts = normalizeList(dsaConcepts);
+    const normalizedDomainConcepts = normalizeList(domainConcepts);
+
+    if (!normalizedDsaConcepts.length || !normalizedDomainConcepts.length) {
+      return res.status(400).json({
+        message: 'Please provide both DSA concepts and domain concepts to predict your level.',
+      });
+    }
+
+    const prediction = evaluateStudentLevel({
+      dsaConcepts: normalizedDsaConcepts,
+      domainConcepts: normalizedDomainConcepts,
+      targetDomain,
+    });
+
+    return res.status(200).json(prediction);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };

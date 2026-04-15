@@ -10,12 +10,20 @@ const usePolling = (callback, delay = 15000, enabled = true) => {
       return undefined;
     }
 
-    const timer = window.setInterval(() => {
+    const runPoll = () => {
+      if (typeof document !== 'undefined' && document.hidden) {
+        return;
+      }
+
       onPoll();
+    };
+
+    const timer = window.setInterval(() => {
+      runPoll();
     }, delay);
 
     return () => window.clearInterval(timer);
-  }, [delay, enabled]);
+  }, [delay, enabled, onPoll]);
 };
 
 export default usePolling;

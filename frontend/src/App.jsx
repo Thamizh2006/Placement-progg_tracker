@@ -11,14 +11,13 @@ const StudentProgress = lazy(() => import('./pages/StudentProgress'));
 const StudentMentor = lazy(() => import('./pages/student/StudentMentor'));
 const StudentDoubts = lazy(() => import('./pages/student/StudentDoubts'));
 const StudentReports = lazy(() => import('./pages/student/StudentReports'));
-const StudentAssessments = lazy(() => import('./pages/student/StudentAssessments'));
+const StudentCheckLevel = lazy(() => import('./pages/student/StudentCheckLevel'));
 const StudentResumeBuilder = lazy(() => import('./pages/student/StudentResumeBuilder'));
 const ForumPage = lazy(() => import('./pages/shared/ForumPage'));
 const FacultyDashboard = lazy(() => import('./pages/faculty/FacultyDashboard'));
 const FacultyStudents = lazy(() => import('./pages/faculty/FacultyStudents'));
 const FacultyDoubts = lazy(() => import('./pages/faculty/FacultyDoubts'));
 const FacultyResources = lazy(() => import('./pages/faculty/FacultyResources'));
-const FacultyAssessments = lazy(() => import('./pages/faculty/FacultyAssessments'));
 const HodDashboard = lazy(() => import('./pages/hod/HodDashboard'));
 const HodFaculty = lazy(() => import('./pages/hod/HodFaculty'));
 const HodStudents = lazy(() => import('./pages/hod/HodStudents'));
@@ -78,7 +77,7 @@ function App() {
             <Route path="doubts" element={<StudentDoubts />} />
             <Route path="forum" element={<ForumPage />} />
             <Route path="reports" element={<StudentReports />} />
-            <Route path="assessments" element={<StudentAssessments />} />
+            <Route path="check-level" element={<StudentCheckLevel />} />
             <Route path="resume" element={<StudentResumeBuilder />} />
             <Route index element={<Navigate to="dashboard" replace />} />
           </Route>
@@ -97,7 +96,6 @@ function App() {
             <Route path="forum" element={<ForumPage />} />
             <Route path="progress" element={<FacultyStudents />} />
             <Route path="resources" element={<FacultyResources />} />
-            <Route path="assessments" element={<FacultyAssessments />} />
             <Route index element={<Navigate to="dashboard" replace />} />
           </Route>
 

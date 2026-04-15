@@ -3,6 +3,7 @@ import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   BarChart3,
+  BrainCircuit,
   BookOpen,
   Building2,
   Compass,
@@ -38,7 +39,7 @@ const ProtectedLayout = () => {
       { icon: MessageCircle, label: 'Doubts', path: '/student/doubts' },
       { icon: Megaphone, label: 'Forum', path: '/student/forum' },
       { icon: FileText, label: 'Reports', path: '/student/reports' },
-      { icon: BarChart3, label: 'Assessments', path: '/student/assessments' },
+      { icon: BrainCircuit, label: 'Check Your Level', path: '/student/check-level' },
       { icon: Settings, label: 'Resume', path: '/student/resume' },
     ],
     faculty: [
@@ -48,7 +49,6 @@ const ProtectedLayout = () => {
       { icon: Megaphone, label: 'Forum', path: '/faculty/forum' },
       { icon: BarChart3, label: 'Progress', path: '/faculty/progress' },
       { icon: BookOpen, label: 'Resources', path: '/faculty/resources' },
-      { icon: FileText, label: 'Assessments', path: '/faculty/assessments' },
     ],
     hod: [
       { icon: LayoutDashboard, label: 'Dashboard', path: '/hod/dashboard' },
@@ -74,7 +74,6 @@ const ProtectedLayout = () => {
       { icon: Megaphone, label: 'Forum', path: '/admin/forum' },
       { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
       { icon: FileText, label: 'Reports', path: '/admin/reports' },
-      { icon: BarChart3, label: 'Assessments', path: '/admin/assessments' },
       { icon: Settings, label: 'Settings', path: '/admin/settings' },
       { icon: Shield, label: 'Roles', path: '/admin/roles' },
     ],
@@ -82,6 +81,7 @@ const ProtectedLayout = () => {
 
   const menuItems = roleMenus[role] || [];
   const currentItem = menuItems.find((item) => location.pathname.startsWith(item.path));
+  const showDepartmentBadge = role !== 'superadmin';
 
   const sidebarContent = (
     <>
@@ -189,9 +189,11 @@ const ProtectedLayout = () => {
               <span className="status-pill border border-sky-100 bg-sky-50 text-sky-700">
                 {role}
               </span>
-              <span className="status-pill border border-emerald-100 bg-emerald-50 text-emerald-700">
-                {user?.department || 'All departments'}
-              </span>
+              {showDepartmentBadge ? (
+                <span className="status-pill border border-emerald-100 bg-emerald-50 text-emerald-700">
+                  {user?.department || 'All departments'}
+                </span>
+              ) : null}
             </div>
           </div>
 

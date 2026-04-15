@@ -6,6 +6,26 @@ import TestSubmission from '../models/testSubmissionModel.js';
 import User from '../models/userModel.js';
 import { analyzeResumeProfile, buildResumeFromSources } from '../utils/resumeEngine.js';
 
+const getSupportingResumeSignals = async (studentId) => {
+  const [submissions, codingProfile] = await Promise.all([
+    TestSubmission.find({
+      student: studentId,
+      status: { $in: ['submitted', 'auto_submitted'] },
+    }),
+    CodingProfile.findOne({ student: studentId }),
+  ]);
+
+  return {
+    testReadinessScore: submissions.length
+      ? Math.round(
+          submissions.reduce((sum, submission) => sum + (submission.accuracy || 0), 0) /
+            submissions.length
+        )
+      : 0,
+    codingReadinessScore: codingProfile?.placementReadinessScore || 0,
+  };
+};
+
 const getRoleReadyResume = async (studentId) => {
   const [user, progress, codingProfile, submissions, resume] = await Promise.all([
     User.findById(studentId).select('email department selectedCategory'),
@@ -112,24 +132,15 @@ export const saveMyResume = async (req, res) => {
       sectionOrder: payload.sectionOrder || current?.sectionOrder || [],
     };
 
-    const [submissions, codingProfile] = await Promise.all([
-      TestSubmission.find({
-        student: req.user._id,
-        status: { $in: ['submitted', 'auto_submitted'] },
-      }),
-      CodingProfile.findOne({ student: req.user._id }),
-    ]);
+    const { testReadinessScore, codingReadinessScore } = await getSupportingResumeSignals(
+      req.user._id
+    );
 
     const analysis = analyzeResumeProfile({
       resume: nextResume,
       targetRole: nextResume.targetRole,
-      testReadinessScore: submissions.length
-        ? Math.round(
-            submissions.reduce((sum, submission) => sum + (submission.accuracy || 0), 0) /
-              submissions.length
-          )
-        : 0,
-      codingReadinessScore: codingProfile?.placementReadinessScore || 0,
+      testReadinessScore,
+      codingReadinessScore,
     });
 
     const saved = await ResumeProfile.findOneAndUpdate(
@@ -154,6 +165,48 @@ export const saveMyResume = async (req, res) => {
   }
 };
 
+export const previewResumeAnalysis = async (req, res) => {
+  try {
+    const payload = req.body || {};
+    const current = await ResumeProfile.findOne({ student: req.user._id });
+    const nextResume = {
+      student: req.user._id,
+      template: payload.template || current?.template || 'ats',
+      targetRole: payload.targetRole || current?.targetRole || 'Software Engineer',
+      personalInfo: payload.personalInfo || current?.personalInfo || {},
+      education: payload.education || current?.education || [],
+      skills: payload.skills || current?.skills || [],
+      projects: payload.projects || current?.projects || [],
+      experience: payload.experience || current?.experience || [],
+      certifications: payload.certifications || current?.certifications || [],
+      sectionOrder: payload.sectionOrder || current?.sectionOrder || [],
+    };
+
+    const { testReadinessScore, codingReadinessScore } = await getSupportingResumeSignals(
+      req.user._id
+    );
+
+    const analysis = analyzeResumeProfile({
+      resume: nextResume,
+      targetRole: nextResume.targetRole,
+      testReadinessScore,
+      codingReadinessScore,
+    });
+
+    res.json({
+      ...nextResume,
+      ...analysis,
+      analysis: {
+        strengths: analysis.strengths,
+        missingKeywords: analysis.missingKeywords,
+        weakSections: analysis.weakSections,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const analyzeMyResume = async (req, res) => {
   try {
     const resume = await ResumeProfile.findOne({ student: req.user._id });
@@ -161,24 +214,15 @@ export const analyzeMyResume = async (req, res) => {
       return res.status(404).json({ message: 'Resume profile not found' });
     }
 
-    const [submissions, codingProfile] = await Promise.all([
-      TestSubmission.find({
-        student: req.user._id,
-        status: { $in: ['submitted', 'auto_submitted'] },
-      }),
-      CodingProfile.findOne({ student: req.user._id }),
-    ]);
+    const { testReadinessScore, codingReadinessScore } = await getSupportingResumeSignals(
+      req.user._id
+    );
 
     const analysis = analyzeResumeProfile({
       resume,
       targetRole: resume.targetRole,
-      testReadinessScore: submissions.length
-        ? Math.round(
-            submissions.reduce((sum, submission) => sum + (submission.accuracy || 0), 0) /
-              submissions.length
-          )
-        : 0,
-      codingReadinessScore: codingProfile?.placementReadinessScore || 0,
+      testReadinessScore,
+      codingReadinessScore,
     });
 
     resume.atsScore = analysis.atsScore;

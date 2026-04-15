@@ -4,12 +4,12 @@ import { Doughnut } from 'react-chartjs-2';
 import {
   BellRing,
   ArrowRight,
+  BrainCircuit,
   FileText,
   Lightbulb,
   MessageCircle,
   Sparkles,
   TrendingUp,
-  User,
 } from 'lucide-react';
 import PageLoader from '../../components/PageLoader';
 import InsightFeed from '../../components/InsightFeed';
@@ -143,10 +143,10 @@ const StudentDashboard = () => {
       detail: 'Complete tasks and sync your latest work.',
     },
     {
-      icon: User,
-      label: 'Mentor',
-      path: '/student/mentor',
-      detail: 'Choose or change your assigned faculty mentor.',
+      icon: BrainCircuit,
+      label: 'Check Your Level',
+      path: '/student/check-level',
+      detail: 'Predict your package band and get next-step topics.',
     },
     {
       icon: MessageCircle,

@@ -6,6 +6,7 @@ import {
   changeMentor,
   getMyProgress,
   checkEligibility,
+  checkMyLevel,
   getStudentDashboard,
   getMentorRecommendations,
 } from '../controllers/studentController.js';
@@ -44,6 +45,7 @@ router.post('/select-category', selectCategory);
 router.get('/my-progress', getMyProgressData);
 router.get('/check-eligibility', checkMyEligibility);
 router.get('/readiness-insights', getReadinessInsights);
+router.post('/check-level', checkMyLevel);
 
 // Task Management
 router.post('/update-task', proofUpload.single('proofFile'), updateTask);
