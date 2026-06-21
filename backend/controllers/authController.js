@@ -5,7 +5,7 @@ import nodemailer from 'nodemailer';
 import Progress from '../models/progressModel.js';
 import User from '../models/userModel.js';
 import { logAuditEvent } from '../utils/auditLogger.js';
-
+import axios from "axios";
 const sanitizeUser = (user) => ({
   _id: user._id,
   email: user.email,
@@ -87,47 +87,150 @@ export const register = async (req, res) => {
    LOGIN
 =========================== */
 export const login = async (req, res) => {
+
   try {
+
     const email = normalizeEmail(req.body.email);
     const { password } = req.body;
 
     const user = await User.findOne({ email });
+
+    // USER NOT FOUND
     if (!user) {
-      return res.status(404).json({ message: `${email} not found` });
+
+      try {
+
+        await axios.post(
+          process.env.CYBERSHIELD_URL,
+          {
+            eventType: "UNKNOWN_USER_LOGIN",
+            email,
+            ipAddress: req.ip,
+            details: "Login attempted with unknown account"
+          }
+        );
+
+      } catch (err) {
+
+        console.log("CyberShield logging failed");
+
+      }
+
+      return res.status(404).json({
+        message: `${email} not found`
+      });
+
     }
 
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+    // PASSWORD CHECK
+    const valid = await bcrypt.compare(
+      password,
+      user.password
     );
 
+    // INVALID PASSWORD
+    if (!valid) {
+
+      try {
+
+        await axios.post(
+          process.env.CYBERSHIELD_URL,
+          {
+            eventType: "LOGIN_FAILED",
+            email,
+            ipAddress: req.ip,
+            details: "Invalid password attempt"
+          }
+        );
+
+      } catch (err) {
+
+        console.log("CyberShield logging failed");
+
+      }
+
+      return res.status(401).json({
+        message: "Invalid credentials"
+      });
+
+    }
+
+    // JWT TOKEN
+    const token = jwt.sign(
+
+      {
+        id: user._id,
+        role: user.role
+      },
+
+      process.env.JWT_SECRET,
+
+      {
+        expiresIn: "1h"
+      }
+
+    );
+
+    // SUCCESSFUL LOGIN
+    try {
+
+      await axios.post(
+        process.env.CYBERSHIELD_URL,
+        {
+          eventType: "LOGIN_SUCCESS",
+          email,
+          role: user.role,
+          ipAddress: req.ip,
+          details: "User logged in successfully"
+        }
+      );
+
+    } catch (err) {
+
+      console.log("CyberShield logging failed");
+
+    }
+
     res.status(200).json({
+
       message: `Logged in as ${user.role} successfully`,
+
       token,
+
       role: user.role,
-      user: sanitizeUser(user),
+
+      user: sanitizeUser(user)
+
     });
 
     await logAuditEvent({
+
       req,
+
       actor: user,
-      action: 'login',
-      entityType: 'user',
+
+      action: "login",
+
+      entityType: "user",
+
       entityId: user._id.toString(),
-      description: `${user.email} signed in`,
+
+      description: `${user.email} signed in`
+
     });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+
   }
+
+  catch (error) {
+
+    res.status(500).json({
+
+      message: error.message
+
+    });
+
+  }
+
 };
 
 /* ===========================
